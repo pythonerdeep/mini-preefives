@@ -11,5 +11,10 @@ Step 1: - Creating a venv file and installing all their dependency packeages whi
     >> pip install -r requirenments.txt
 
 
+Step 2: - Setup database and creating the models.
+# using sqlite
+
+
+
 
 
