@@ -49,6 +49,9 @@ Step 3:- Run the fast api server.
     >> cd mini-preefives
     >> python run.py
 
+Step 3:- After run the server you can check all created API's on below link i have also attached an screenshot.
+    >> http://localhost:8000/docs/
+
 
 
 
