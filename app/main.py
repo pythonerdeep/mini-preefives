@@ -1,12 +1,23 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .database import engine, database
-from .models import Base, User
+from .database import engine, database, get_db
+from .models import User, RewardHistory
+from pydantic import BaseModel
 
 app = FastAPI()
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Pydantic Schemas
+class UserCreate(BaseModel):
+    id: str
+    name: str
+
+class UserUpdate(BaseModel):
+    name: str
+
+class TransactionCreate(BaseModel):
+    given_by_id: str
+    given_to_id: str
+    points: int
 
 # Dependency to get the database session
 def get_db():
@@ -16,14 +27,5 @@ def get_db():
     finally:
         db.close()
 
-# Connect to the database on startup
-@app.on_event("startup")
-async def startup():
-    await database.connect()
 
-# Disconnect from the database on shutdown
-@app.on_event("shutdown")
-async def shutdown():
-    await database.disconnect()
-
-# Route to create API
+############## Route to create API #########################

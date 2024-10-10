@@ -8,6 +8,8 @@ class User(Base):
 
     id = Column(String, primary_key=True, index=True)
     name = Column(String, index=True)
+    p5_balance = Column(Integer, default=100)
+    rewards_balance = Column(Integer, default=0)
 
     # Relationship to track the rewards given by this user and received by this user
     rewards_given = relationship("RewardHistory", foreign_keys="[RewardHistory.given_by_id]", back_populates="given_by")
