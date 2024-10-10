@@ -1,8 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import engine, get_db
-from .models import User, RewardHistory
+from .models import User, RewardHistory, Base
 from pydantic import BaseModel
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -23,6 +25,13 @@ class TransactionCreate(BaseModel):
 
 ############## Route to create API #########################
 
+# Get All users
+@app.get("/users")
+async def get_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+    return users
+
+
 # Create user
 @app.post('/users/')
 async def create_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -30,4 +39,14 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    return db_user
+
+# Edit user
+@app.put("/users/{user_id}")
+async def update_user(user_id: str, user: UserUpdate, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    db_user.name = user.name
+    db.commit()
     return db_user
