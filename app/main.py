@@ -84,3 +84,22 @@ async def create_transaction(transaction: TransactionCreate, db: Session = Depen
 async def get_transactions(db: Session = Depends(get_db)):
     transactions = db.query(RewardHistory).all()
     return transactions
+
+
+# Delete a transaction
+@app.delete("/transactions/{transaction_id}")
+async def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
+    transaction = db.query(RewardHistory).filter(RewardHistory.id == transaction_id).first()
+    if not transaction:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    
+    # Revert balances
+    giver = db.query(User).filter(User.id == transaction.given_by_id).first()
+    receiver = db.query(User).filter(User.id == transaction.given_to_id).first()
+    giver.p5_balance += transaction.points
+    receiver.rewards_balance -= transaction.points
+
+    # Delete transaction
+    db.delete(transaction)
+    db.commit()
+    return {"detail": "Transaction deleted"}
