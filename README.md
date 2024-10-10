@@ -23,9 +23,31 @@ Step 4:- After step1 & step2 required to setup db in our main.py file.
 # main.py
 
 
-Step 5:-Creatig API's as per given.
+Step 5:- Creatig API's as per given.
+
+    ## users
+        1. Get users
+        2. Create users
+        3. Edit users.
+
+    ## Transactions
+        1. Create Transactions
+        2. Delete Transactions
+
+    ## Rewards
+        1. Get rewards
 
 
+---------------------- Run Backend -----------------------
+
+Step 1:- Create venv and install requirenments file.
+    >> venv\Scripts\activate
+    >> pip install -r requirenments.txt
+
+
+Step 3:- Run the fast api server.
+    >> cd mini-preefives
+    >> python run.py
 
 
 

@@ -103,3 +103,12 @@ async def delete_transaction(transaction_id: int, db: Session = Depends(get_db))
     db.delete(transaction)
     db.commit()
     return {"detail": "Transaction deleted"}
+
+
+# Get rewards for a user
+@app.get("/users/{user_id}/rewards/")
+async def get_user_rewards(user_id: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"rewards_balance": user.rewards_balance}
