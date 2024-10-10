@@ -1,17 +1,17 @@
 # database.py
-from sqlalchemy import create_engine, MetaData
-from sqlalchemy.ext.declarative import declarative_base
-from databases import Database
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-# SQLite database URL (SQLite file is stored locally)
-DATABASE_URL = "sqlite:///./test.db"
+DATABASE_URL = "sqlite:///./test.db"  # Replace with your database URL
 
-# SQLAlchemy engine
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# For managing async queries
-database = Database(DATABASE_URL)
-
-# Base class for SQLAlchemy models
 Base = declarative_base()
-metadata = MetaData()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

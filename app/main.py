@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .database import engine, database, get_db
+from app.database import engine, get_db
 from .models import User, RewardHistory
 from pydantic import BaseModel
 
@@ -19,13 +19,15 @@ class TransactionCreate(BaseModel):
     given_to_id: str
     points: int
 
-# Dependency to get the database session
-def get_db():
-    db = Session(bind=engine)
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 ############## Route to create API #########################
+
+# Create user
+@app.post('/users/')
+async def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = User(id=user.id, name=user.name, p5_balance=100, rewards_balance=0)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
