@@ -13,8 +13,14 @@ Step 1: - Creating a venv file and installing all their dependency packeages whi
 
 Step 2: - Setup database.
 # using sqlite
+ >> database.py
 
 Step 3:- After setup database, creating models as per given entities/models.
+# models.py
+
+
+Step 4:- After step1 & step2 required to setup db in our main.py file.
+# main.py
 
 
 
