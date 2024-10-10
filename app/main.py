@@ -50,3 +50,30 @@ async def update_user(user_id: str, user: UserUpdate, db: Session = Depends(get_
     db_user.name = user.name
     db.commit()
     return db_user
+
+
+# Create a P5 transaction
+@app.post("/transactions/")
+async def create_transaction(transaction: TransactionCreate, db: Session = Depends(get_db)):
+    giver = db.query(User).filter(User.id == transaction.given_by_id).first()
+    receiver = db.query(User).filter(User.id == transaction.given_to_id).first()
+
+    if not giver or not receiver:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if giver.p5_balance < transaction.points:
+        raise HTTPException(status_code=400, detail="Insufficient P5 balance")
+
+    # Update balances
+    giver.p5_balance -= transaction.points
+    receiver.rewards_balance += transaction.points
+
+    # Create transaction record
+    reward_history = RewardHistory(
+        given_by_id=transaction.given_by_id,
+        given_to_id=transaction.given_to_id,
+        points=transaction.points
+    )
+    db.add(reward_history)
+    db.commit()
+    return reward_history
