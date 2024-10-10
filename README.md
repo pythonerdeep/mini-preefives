@@ -23,7 +23,7 @@ Step 4:- After step1 & step2 required to setup db in our main.py file.
 # main.py
 
 
-Step 5:-Creatig API's as per given
+Step 5:-Creatig API's as per given.
 
 
 

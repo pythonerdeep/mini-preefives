@@ -77,3 +77,10 @@ async def create_transaction(transaction: TransactionCreate, db: Session = Depen
     db.add(reward_history)
     db.commit()
     return reward_history
+
+
+# Get all transactions
+@app.get("/transactions/")
+async def get_transactions(db: Session = Depends(get_db)):
+    transactions = db.query(RewardHistory).all()
+    return transactions
